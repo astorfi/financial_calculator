@@ -1,20 +1,39 @@
 from flask import Flask, render_template, request
 import numpy as np
+import os
 
 app = Flask(__name__)
 
-# Function definitions (same as the code provided earlier)
+# Parameters
+initial_purchase_price = 1000000
+down_payment_percentage = 0.2
+buyer_closing_costs_percentage = 0.03
+annual_interest_rate = 0.075 # 7.5% current interest rate for home purchase
+loan_term_years = 30
+property_tax_rate = 0.01
+home_insurance_initial = 1500
+maintenance_rate = 0.01
+hoa_fee_initial = 300
+hoa_fee_annual_increase = 0.03
+inflation_rate = 0.03
+annual_appreciation_rate = 0.04
+annual_stock_market_return = 0.07
+vacancy_rate = 0.05
+property_management_fee_rate = 0.1
+price_to_rent_ratio = 20
+monthly_rental_estimate = (initial_purchase_price / price_to_rent_ratio) / 12
+print(f"monthly_rental_estimate: {monthly_rental_estimate}")
+annual_rent_increase_rate = 0.04
+agent_commission_rate = 0.055
+transfer_tax_rate = 0.0025
+fixed_selling_costs = 1500 + 1000 + 50  # Title insurance, attorney fees, recording fees
 
 # Function to calculate monthly mortgage payment
-
-
 def calculate_monthly_payment(principal, annual_interest_rate, total_months):
     monthly_interest_rate = annual_interest_rate / 12
     return principal * (monthly_interest_rate * (1 + monthly_interest_rate) ** total_months) / ((1 + monthly_interest_rate) ** total_months - 1)
 
 # Function to simulate buying, living, and selling a home
-
-
 def simulate_buy_live_sell(initial_purchase_price, years_to_live, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs):
     down_payment = initial_purchase_price * down_payment_percentage
     loan_amount = initial_purchase_price - down_payment
@@ -200,7 +219,28 @@ def simulate_rent_only(years_to_live, initial_purchase_price, price_to_rent_rati
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',
+                           initial_purchase_price=1000000,
+                           down_payment_percentage=0.2,
+                           buyer_closing_costs_percentage=0.03,
+                           annual_interest_rate=0.075,
+                           loan_term_years=30,
+                           property_tax_rate=0.01,
+                           home_insurance_initial=1500,
+                           maintenance_rate=0.01,
+                           hoa_fee_initial=300,
+                           hoa_fee_annual_increase=0.03,
+                           inflation_rate=0.03,
+                           annual_appreciation_rate=0.04,
+                           annual_stock_market_return=0.07,
+                           vacancy_rate=0.05,
+                           property_management_fee_rate=0.1,
+                           price_to_rent_ratio=20,
+                           annual_rent_increase_rate=0.04,
+                           agent_commission_rate=0.055,
+                           transfer_tax_rate=0.0025,
+                           fixed_selling_costs=1500 + 1000 + 50)
+
 
 @app.route('/calculate', methods=['POST'])
 def calculate():

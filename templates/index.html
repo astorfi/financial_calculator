@@ -1,22 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Financial Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Investment Calculator</title>
 </head>
+
 <body>
-    <h1>Financial Calculator</h1>
-    <form action="/calculate" method="POST">
-        <!-- Add input fields for all the parameters -->
+    <h1>Real Estate Investment Calculator</h1>
+    <form action="/calculate" method="post">
         <label for="initial_purchase_price">Initial Purchase Price:</label>
-        <input type="text" id="initial_purchase_price" name="initial_purchase_price"><br>
+        <input type="number" id="initial_purchase_price" name="initial_purchase_price" placeholder="1000000" required>
+        <br>
+
         <label for="down_payment_percentage">Down Payment Percentage:</label>
-        <input type="text" id="down_payment_percentage" name="down_payment_percentage"><br>
-        <!-- Add similar input fields for all other parameters -->
+        <input type="number" id="down_payment_percentage" name="down_payment_percentage" placeholder="0.2" required>
+        <br>
+
+        <label for="buyer_closing_costs_percentage">Buyer Closing Costs Percentage:</label>
+        <input type="number" id="buyer_closing_costs_percentage" name="buyer_closing_costs_percentage" placeholder="0.03" required>
+        <br>
+
+        <label for="annual_interest_rate">Annual Interest Rate:</label>
+        <input type="number" id="annual_interest_rate" name="annual_interest_rate" placeholder="0.075" required>
+        <br>
+
+        <label for="loan_term_years">Loan Term (Years):</label>
+        <input type="number" id="loan_term_years" name="loan_term_years" placeholder="30" required>
+        <br>
+
+        <label for="property_tax_rate">Property Tax Rate:</label>
+        <input type="number" id="property_tax_rate" name="property_tax_rate" placeholder="0.01" required>
+        <br>
+
+        <label for="home_insurance_initial">Home Insurance Initial:</label>
+        <input type="number" id="home_insurance_initial" name="home_insurance_initial" placeholder="1500" required>
+        <br>
+
+        <label for="maintenance_rate">Maintenance Rate:</label>
+        <input type="number" id="maintenance_rate" name="maintenance_rate" placeholder="0.01" required>
+        <br>
+
+        <label for="hoa_fee_initial">HOA Fee Initial:</label>
+        <input type="number" id="hoa_fee_initial" name="hoa_fee_initial" placeholder="300" required>
+        <br>
+
+        <label for="hoa_fee_annual_increase">HOA Fee Annual Increase:</label>
+        <input type="number" id="hoa_fee_annual_increase" name="hoa_fee_annual_increase" placeholder="0.03" required>
+        <br>
+
+        <label for="inflation_rate">Inflation Rate:</label>
+        <input type="number" id="inflation_rate" name="inflation_rate" placeholder="0.03" required>
+        <br>
+
+        <label for="annual_appreciation_rate">Annual Appreciation Rate:</label>
+        <input type="number" id="annual_appreciation_rate" name="annual_appreciation_rate" placeholder="0.04" required>
+        <br>
+
+        <label for="annual_stock_market_return">Annual Stock Market Return:</label>
+        <input type="number" id="annual_stock_market_return" name="annual_stock_market_return" placeholder="0.07" required>
+        <br>
+
+        <label for="vacancy_rate">Vacancy Rate:</label>
+        <input type="number" id="vacancy_rate" name="vacancy_rate" placeholder="0.05" required>
+        <br>
+
+        <label for="property_management_fee_rate">Property Management Fee Rate:</label>
+        <input type="number" id="property_management_fee_rate" name="property_management_fee_rate" placeholder="0.1" required>
+        <br>
+
+        <label for="price_to_rent_ratio">Price to Rent Ratio:</label>
+        <input type="number" id="price_to_rent_ratio" name="price_to_rent_ratio" placeholder="20" required>
+        <br>
+
+        <label for="annual_rent_increase_rate">Annual Rent Increase Rate:</label>
+        <input type="number" id="annual_rent_increase_rate" name="annual_rent_increase_rate" placeholder="0.04" required>
+        <br>
+
+        <label for="agent_commission_rate">Agent Commission Rate:</label>
+        <input type="number" id="agent_commission_rate" name="agent_commission_rate" placeholder="0.055" required>
+        <br>
+
+        <label for="transfer_tax_rate">Transfer Tax Rate:</label>
+        <input type="number" id="transfer_tax_rate" name="transfer_tax_rate" placeholder="0.0025" required>
+        <br>
+
+        <label for="fixed_selling_costs">Fixed Selling Costs:</label>
+        <input type="number" id="fixed_selling_costs" name="fixed_selling_costs" placeholder="2550" required>
+        <br>
+
         <label for="years_to_live">Years to Live:</label>
-        <input type="text" id="years_to_live" name="years_to_live"><br>
+        <input type="number" id="years_to_live" name="years_to_live" required>
+        <br>
+
         <label for="years_to_rent">Years to Rent:</label>
-        <input type="text" id="years_to_rent" name="years_to_rent"><br>
-        <input type="submit" value="Calculate">
+        <input type="number" id="years_to_rent" name="years_to_rent" required>
+        <br>
+
+        <button type="submit">Calculate</button>
     </form>
 </body>
+
 </html>
