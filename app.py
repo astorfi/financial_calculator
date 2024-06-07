@@ -31,17 +31,48 @@ transfer_tax_rate = 0.0025
 # Title insurance, attorney fees, recording fees
 fixed_selling_costs = 1500 + 1000 + 50
 
-# Function to calculate monthly mortgage payment
-
-
 def calculate_monthly_payment(principal, annual_interest_rate, total_months):
+    """
+    Calculates the monthly mortgage payment based on the principal, annual interest rate, and total number of months.
+
+    Args:
+        principal (float): The principal amount of the loan.
+        annual_interest_rate (float): The annual interest rate on the loan.
+        total_months (int): The total number of months of the loan term.
+
+    Returns:
+        float: The monthly mortgage payment.
+
+    """
     monthly_interest_rate = annual_interest_rate / 12
     return principal * (monthly_interest_rate * (1 + monthly_interest_rate) ** total_months) / ((1 + monthly_interest_rate) ** total_months - 1)
 
-# Function to simulate buying, living, and selling a home
-
-
 def simulate_buy_live_sell(initial_purchase_price, years_to_live, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs):
+    """
+    Simulates the financial outcome of buying, living, and selling a home.
+
+    Args:
+        initial_purchase_price (float): The initial purchase price of the home.
+        years_to_live (int): The number of years the person plans to live in the home.
+        down_payment_percentage (float): The percentage of the initial purchase price paid as a down payment.
+        buyer_closing_costs_percentage (float): The percentage of the initial purchase price paid as buyer closing costs.
+        annual_interest_rate (float): The annual interest rate on the mortgage.
+        loan_term_years (int): The number of years of the mortgage loan term.
+        property_tax_rate (float): The annual property tax rate as a decimal.
+        home_insurance_initial (float): The initial annual home insurance cost.
+        maintenance_rate (float): The annual maintenance cost as a percentage of the initial purchase price.
+        hoa_fee_initial (float): The initial monthly HOA fee.
+        hoa_fee_annual_increase (float): The annual increase in the HOA fee as a decimal.
+        inflation_rate (float): The annual inflation rate as a decimal.
+        annual_appreciation_rate (float): The annual property appreciation rate as a decimal.
+        agent_commission_rate (float): The agent commission rate as a decimal.
+        transfer_tax_rate (float): The transfer tax rate as a decimal.
+        fixed_selling_costs (float): The fixed selling costs.
+
+    Returns:
+        float: The net profit from selling the home after the specified number of years.
+
+    """
     down_payment = initial_purchase_price * down_payment_percentage
     loan_amount = initial_purchase_price - down_payment
     buyer_closing_costs = initial_purchase_price * buyer_closing_costs_percentage
@@ -82,10 +113,37 @@ def simulate_buy_live_sell(initial_purchase_price, years_to_live, down_payment_p
 
     return net_profit
 
-# Function to simulate buying, living, renting, and selling a home
-
-
 def simulate_buy_live_rent_sell(initial_purchase_price, years_to_live, years_to_rent, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs):
+    """
+    Simulates the financial outcome of buying, living, renting, and selling a home.
+
+    Args:
+        initial_purchase_price (float): The initial purchase price of the home.
+        years_to_live (int): The number of years the person plans to live in the home.
+        years_to_rent (int): The number of years the person plans to rent after living in the home.
+        down_payment_percentage (float): The percentage of the initial purchase price paid as a down payment.
+        buyer_closing_costs_percentage (float): The percentage of the initial purchase price paid as buyer closing costs.
+        annual_interest_rate (float): The annual interest rate on the mortgage.
+        loan_term_years (int): The number of years of the mortgage loan term.
+        property_tax_rate (float): The annual property tax rate as a decimal.
+        home_insurance_initial (float): The initial annual home insurance cost.
+        maintenance_rate (float): The annual maintenance cost as a percentage of the initial purchase price.
+        hoa_fee_initial (float): The initial monthly HOA fee.
+        hoa_fee_annual_increase (float): The annual increase in the HOA fee as a decimal.
+        inflation_rate (float): The annual inflation rate as a decimal.
+        annual_appreciation_rate (float): The annual property appreciation rate as a decimal.
+        vacancy_rate (float): The vacancy rate as a decimal.
+        property_management_fee_rate (float): The property management fee rate as a decimal.
+        price_to_rent_ratio (float): The price-to-rent ratio.
+        annual_rent_increase_rate (float): The annual rent increase rate as a decimal.
+        agent_commission_rate (float): The agent commission rate as a decimal.
+        transfer_tax_rate (float): The transfer tax rate as a decimal.
+        fixed_selling_costs (float): The fixed selling costs.
+
+    Returns:
+        float: The net profit from selling the home after the specified number of years, taking into account rental income.
+
+    """
     down_payment = initial_purchase_price * down_payment_percentage
     loan_amount = initial_purchase_price - down_payment
     buyer_closing_costs = initial_purchase_price * buyer_closing_costs_percentage
@@ -143,9 +201,38 @@ def simulate_buy_live_rent_sell(initial_purchase_price, years_to_live, years_to_
     return net_profit
 
 # Function to simulate renting and investing
-
-
 def simulate_rent_invest(years_to_live, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return):
+    """
+    Simulates the financial outcome of renting versus buying a property and investing the difference.
+
+    Args:
+        years_to_live (int): The number of years the person plans to live in the property.
+        years_to_rent (int): The number of years the person plans to rent after living in the property.
+        initial_purchase_price (float): The initial purchase price of the property.
+        down_payment_percentage (float): The percentage of the initial purchase price paid as a down payment.
+        buyer_closing_costs_percentage (float): The percentage of the initial purchase price paid as buyer closing costs.
+        annual_interest_rate (float): The annual interest rate on the mortgage.
+        loan_term_years (int): The number of years of the mortgage loan term.
+        property_tax_rate (float): The annual property tax rate as a decimal.
+        home_insurance_initial (float): The initial annual home insurance cost.
+        maintenance_rate (float): The annual maintenance cost as a percentage of the initial purchase price.
+        hoa_fee_initial (float): The initial monthly HOA fee.
+        hoa_fee_annual_increase (float): The annual increase in the HOA fee as a decimal.
+        inflation_rate (float): The annual inflation rate as a decimal.
+        annual_appreciation_rate (float): The annual property appreciation rate as a decimal.
+        vacancy_rate (float): The vacancy rate as a decimal.
+        property_management_fee_rate (float): The property management fee rate as a decimal.
+        price_to_rent_ratio (float): The price-to-rent ratio.
+        annual_rent_increase_rate (float): The annual rent increase rate as a decimal.
+        agent_commission_rate (float): The agent commission rate as a decimal.
+        transfer_tax_rate (float): The transfer tax rate as a decimal.
+        fixed_selling_costs (float): The fixed selling costs.
+        annual_stock_market_return (float): The annual stock market return as a decimal.
+
+    Returns:
+        float: The final investment value after the specified number of years.
+
+    """
     initial_investment = initial_purchase_price * \
         (down_payment_percentage + buyer_closing_costs_percentage)
     investment_value = initial_investment
@@ -253,6 +340,16 @@ def index():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
+    """
+    Calculate the financial scenarios based on the form data and return the results.
+
+    Returns:
+        A rendered template with the calculated results.
+
+    Raises:
+        KeyError: If any of the required form fields are missing.
+
+    """
     # Retrieve form data
     initial_purchase_price = float(request.form['initial_purchase_price'])
     down_payment_percentage = float(request.form['down_payment_percentage'])
