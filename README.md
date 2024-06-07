@@ -1,25 +1,3 @@
-echo "Testing NumPy versions..."
-echo "------------------------------------------"
-
-numpy_versions=("1.21.0" "1.20.0" "1.19.5")
-
-for version in "${numpy_versions[@]}"
-do
-    echo "Testing NumPy version $version..."
-    conda create -n test-numpy python=3.8 numpy=$version -y
-    conda activate test-numpy
-    pip install -r requirements.txt
-    python app.py &
-    sleep 5
-    curl http://localhost:5000
-    kill $!
-    conda deactivate
-    conda remove -n test-numpy --all -y
-    echo "------------------------------------------"
-done
-
-echo "All NumPy versions tested successfully!"
-
 # Financial Calculator
 
 echo "# Financial Calculator
@@ -34,7 +12,7 @@ This Financial Calculator is a web application built using Flask that allows use
 
 ## Project Structure
 
-\`\`\`
+```
 ├── LICENSE
 ├── Procfile
 ├── README.md
@@ -44,7 +22,7 @@ This Financial Calculator is a web application built using Flask that allows use
 │   ├── index.html
 │   └── result.html
 └── test_numpy_versions.sh
-\`\`\`
+```
 
 - **LICENSE**: The license file containing the project's license information.
 - **Procfile**: A file used by Heroku to specify the commands that are executed by the app on startup.
@@ -62,9 +40,9 @@ This Financial Calculator is a web application built using Flask that allows use
 
 1. Clone the repository to your local machine:
 
-   \`\`\`bash
+   ```bash
    git clone https://github.com/your-username/financial-calculator.git
-   \`\`\`
+   ```
 
 2. Navigate to the project directory:
 
