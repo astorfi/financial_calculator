@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculation Results</title>
+</head>
+<body>
+    <h1>Calculation Results</h1>
+    <p>Net profit after {{ years_to_live }} years living and selling: ${{ profit_buy_live_sell }}</p>
+    <p>Net profit after {{ years_to_live }} years living, {{ years_to_rent }} years renting, and selling: ${{ profit_buy_live_rent_sell }}</p>
+    <p>Investment value after {{ years_to_live + years_to_rent }} years of renting and investing: ${{ investment_rent_invest }}</p>
+    <p>Total cost of renting only for {{ years_to_live }} years: ${{ cost_rent_only }}</p>
+</body>
+</html>

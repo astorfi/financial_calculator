@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+</head>
+<body>
+    <h1>Financial Calculator</h1>
+    <form action="/calculate" method="POST">
+        <!-- Add input fields for all the parameters -->
+        <label for="initial_purchase_price">Initial Purchase Price:</label>
+        <input type="text" id="initial_purchase_price" name="initial_purchase_price"><br>
+        <label for="down_payment_percentage">Down Payment Percentage:</label>
+        <input type="text" id="down_payment_percentage" name="down_payment_percentage"><br>
+        <!-- Add similar input fields for all other parameters -->
+        <label for="years_to_live">Years to Live:</label>
+        <input type="text" id="years_to_live" name="years_to_live"><br>
+        <label for="years_to_rent">Years to Rent:</label>
+        <input type="text" id="years_to_rent" name="years_to_rent"><br>
+        <input type="submit" value="Calculate">
+    </form>
+</body>
+</html>
