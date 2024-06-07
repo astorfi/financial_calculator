@@ -91,10 +91,10 @@ This Financial Calculator is a web application built using Flask that allows use
 5. Deploy your code to Heroku:
 
    ```bash
-   git push heroku master
+   git push heroku main
    ```
 
-6. Access your deployed application using the provided Heroku URL.
+6. Access your deployed application using the provided Heroku URL. Alternatively, you can use 'heroku open' in terminal.
 
 ## Testing (for Numpy only)
 
