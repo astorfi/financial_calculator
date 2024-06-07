@@ -2,12 +2,24 @@
 <html>
 <head>
     <title>Calculation Results</title>
+    <style>
+        .green { color: green; }
+        .red { color: red; }
+    </style>
 </head>
 <body>
     <h1>Calculation Results</h1>
-    <p>Net profit after {{ years_to_live }} years living and selling: ${{ profit_buy_live_sell }}</p>
-    <p>Net profit after {{ years_to_live }} years living, {{ years_to_rent }} years renting, and selling: ${{ profit_buy_live_rent_sell }}</p>
-    <p>Investment value after {{ years_to_live + years_to_rent }} years of renting and investing: ${{ investment_rent_invest }}</p>
-    <p>Total cost of renting only for {{ years_to_live }} years: ${{ cost_rent_only }}</p>
+    <p>Net profit after {{ years_to_live }} years living and selling: ${{ "{:,.2f}".format(profit_buy_live_sell) }}</p>
+    <p>Net profit after {{ years_to_live }} years living, {{ years_to_rent }} years renting, and selling: ${{ "{:,.2f}".format(profit_buy_live_rent_sell) }}</p>
+    <p>Investment value after {{ years_to_live + years_to_rent }} years of renting and investing: ${{ "{:,.2f}".format(investment_rent_invest) }}</p>
+    <p>Total cost of renting only for {{ years_to_live }} years: ${{ "{:,.2f}".format(cost_rent_only) }}</p>
+
+    <p class="{% if optimal_scenario == 'Buy, Live, and Sell' %} green {% else %} red {% endif %}">The optimal scenario is: {{ optimal_scenario }} with a net profit of ${{ "{:,.2f}".format(optimal_profit) }}</p>
+
+    {% if profit_buy_live_sell > -cost_rent_only %}
+        <p class="green">Buying and selling the home after {{ years_to_live }} years is more profitable than renting. Net profit difference: ${{ "{:,.2f}".format(profit_buy_live_sell + cost_rent_only) }}</p>
+    {% else %}
+        <p class="red">Renting for {{ years_to_live }} years is more cost-effective than buying and selling the home. Cost difference: ${{ "{:,.2f}".format(-cost_rent_only - profit_buy_live_sell) }}</p>
+    {% endif %}
 </body>
 </html>

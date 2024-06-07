@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask
+from flask import render_template
+from flask import request
 import numpy as np
 import os
 
@@ -8,7 +10,7 @@ app = Flask(__name__)
 initial_purchase_price = 1000000
 down_payment_percentage = 0.2
 buyer_closing_costs_percentage = 0.03
-annual_interest_rate = 0.075 # 7.5% current interest rate for home purchase
+annual_interest_rate = 0.075  # 7.5% current interest rate for home purchase
 loan_term_years = 30
 property_tax_rate = 0.01
 home_insurance_initial = 1500
@@ -26,14 +28,19 @@ print(f"monthly_rental_estimate: {monthly_rental_estimate}")
 annual_rent_increase_rate = 0.04
 agent_commission_rate = 0.055
 transfer_tax_rate = 0.0025
-fixed_selling_costs = 1500 + 1000 + 50  # Title insurance, attorney fees, recording fees
+# Title insurance, attorney fees, recording fees
+fixed_selling_costs = 1500 + 1000 + 50
 
 # Function to calculate monthly mortgage payment
+
+
 def calculate_monthly_payment(principal, annual_interest_rate, total_months):
     monthly_interest_rate = annual_interest_rate / 12
     return principal * (monthly_interest_rate * (1 + monthly_interest_rate) ** total_months) / ((1 + monthly_interest_rate) ** total_months - 1)
 
 # Function to simulate buying, living, and selling a home
+
+
 def simulate_buy_live_sell(initial_purchase_price, years_to_live, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs):
     down_payment = initial_purchase_price * down_payment_percentage
     loan_amount = initial_purchase_price - down_payment
@@ -239,7 +246,9 @@ def index():
                            annual_rent_increase_rate=0.04,
                            agent_commission_rate=0.055,
                            transfer_tax_rate=0.0025,
-                           fixed_selling_costs=1500 + 1000 + 50)
+                           fixed_selling_costs=1500 + 1000 + 50,
+                           years_to_live=5,
+                           years_to_rent=5)
 
 
 @app.route('/calculate', methods=['POST'])
@@ -302,9 +311,20 @@ def calculate():
         years_to_live, initial_purchase_price, price_to_rent_ratio, annual_rent_increase_rate
     )
 
+    scenarios = ["Buy, Live, and Sell", "Buy, Live, Rent, and Sell", "Rent and Invest", "Rent Only"]
+    profits = [profit_buy_live_sell, profit_buy_live_rent_sell, investment_rent_invest, -cost_rent_only]
+    optimal_scenario = scenarios[np.argmax(profits)]
+    optimal_profit = max(profits)
+
     return render_template('result.html', profit_buy_live_sell=profit_buy_live_sell,
-                           profit_buy_live_rent_sell=profit_buy_live_rent_sell,
-                           investment_rent_invest=investment_rent_invest, cost_rent_only=cost_rent_only)
+                        profit_buy_live_rent_sell=profit_buy_live_rent_sell,
+                        investment_rent_invest=investment_rent_invest, 
+                        cost_rent_only=cost_rent_only, 
+                        years_to_live=years_to_live, 
+                        years_to_rent=years_to_rent,
+                        optimal_scenario=optimal_scenario,
+                        optimal_profit=optimal_profit)
+
 
 
 if __name__ == '__main__':
