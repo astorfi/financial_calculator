@@ -1,7 +1,5 @@
 # Financial Calculator
 
-echo "# Financial Calculator
-
 This Financial Calculator is a web application built using Flask that allows users to simulate different real estate and investment scenarios to analyze their financial outcomes. The application provides insights into buying, living, renting, and investing in properties, helping users make informed financial decisions.
 
 ## Features
@@ -46,23 +44,23 @@ This Financial Calculator is a web application built using Flask that allows use
 
 2. Navigate to the project directory:
 
-   \`\`\`bash
+   ```bash
    cd financial-calculator
-   \`\`\`
+   ```
 
 3. Install the required dependencies:
 
-   \`\`\`bash
+   ```bash
    pip install -r requirements.txt
-   \`\`\`
+   ```
 
 ### Running the Application Locally
 
 1. Run the Flask application:
 
-   \`\`\`bash
+   ```bash
    python app.py
-   \`\`\`
+   ```
 
 2. Access the application in your web browser at \`http://localhost:5000\`.
 
@@ -80,31 +78,31 @@ This Financial Calculator is a web application built using Flask that allows use
 2. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) on your local machine.
 3. Log in to Heroku using the command:
 
-   \`\`\`bash
+   ```bash
    heroku login
-   \`\`\`
+   ```
 
 4. Create a new Heroku app:
 
-   \`\`\`bash
+   ```bash
    heroku create your-app-name
-   \`\`\`
+   ```
 
 5. Deploy your code to Heroku:
 
-   \`\`\`bash
+   ```bash
    git push heroku master
-   \`\`\`
+   ```
 
 6. Access your deployed application using the provided Heroku URL.
 
-## Testing
+## Testing (for Numpy only)
 
 To ensure the application runs smoothly, you can run automated tests on your local machine using the provided test script:
 
-\`\`\`bash
+```bash
 ./test_numpy_versions.sh
-\`\`\`
+```
 
 This script tests various versions of NumPy for compatibility with the project.
 
@@ -113,8 +111,8 @@ This script tests various versions of NumPy for compatibility with the project.
 Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
 
 1. Fork the repository.
-2. Create a new branch (\`git checkout -b feature/your-feature-name\`).
-3. Make your changes and commit them (\`git commit -am 'Add new feature'\`).
+2. Create a new branch (`git checkout -b feature/your-feature-name`).
+3. Make your changes and commit them (`git commit -am 'Add new feature'`).
 4. Push your changes to your forked repository (\`git push origin feature/your-feature-name\`).
 5. Create a new pull request.
 
