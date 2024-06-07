@@ -60,7 +60,7 @@ for version in "${numpy_versions[@]}"; do
     echo "Trying numpy version: $version"
     
     # Update the requirements.txt file with the current numpy version
-    sed -i "s/numpy.*/numpy==$version/" requirements.txt
+    sed -i '' "s/^numpy.*/numpy==$version/" requirements.txt
     
     # Commit the changes
     git add requirements.txt
