@@ -241,6 +241,10 @@ def simulate_rent_invest(years_to_live, years_to_rent, initial_purchase_price, d
     initial_monthly_rent = (initial_purchase_price / price_to_rent_ratio) / 12
 
     for year in range(1, years_to_live + years_to_rent + 1):
+        
+        # Calculate stock market return on last year's investment
+        investment_value = investment_value * (1 + annual_stock_market_return)
+        
         # Calculate costs of homeownership
         annual_property_tax = initial_purchase_price * \
             property_tax_rate * (1 + inflation_rate) ** (year - 1)
@@ -281,8 +285,7 @@ def simulate_rent_invest(years_to_live, years_to_rent, initial_purchase_price, d
                                  total_annual_home_cost)
 
         # Update investment value
-        investment_value = (investment_value + investment_amount) * \
-            (1 + annual_stock_market_return)
+        investment_value = (investment_value + investment_amount)
 
     return investment_value
 
