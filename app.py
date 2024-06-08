@@ -240,7 +240,7 @@ def simulate_rent_invest(years_to_live, years_to_rent, initial_purchase_price, d
     # Calculate initial rent
     initial_monthly_rent = (initial_purchase_price / price_to_rent_ratio) / 12
 
-    for year in range(1, years_to_live + years_to_rent + 1):
+    for year in range(2, years_to_live + years_to_rent + 1):
         
         # Calculate stock market return on last year's investment
         investment_value = investment_value * (1 + annual_stock_market_return)
