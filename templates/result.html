@@ -14,16 +14,24 @@
         <div class="mt-4">
             <p>Net profit after {{ years_to_live }} years living in the house as the owner and selling it: ${{ "{:,.2f}".format(profit_buy_live_sell) }}</p>
             <p>Net profit after {{ years_to_live }} years living in the house as the owner, {{ years_to_rent }} years renting as a landlond, and selling: ${{ "{:,.2f}".format(profit_buy_live_rent_sell) }}</p>
-            <p>Investment value after {{ years_to_live + years_to_rent }} years of simply renting a house as a tenent and investing in market instead of buying the same home and living in it: ${{ "{:,.2f}".format(investment_rent_invest) }}</p>
-            <p>Total cost of renting only for {{ years_to_live }} years: ${{ "{:,.2f}".format(cost_rent_only) }}</p>
+            <p>Investment value after {{ years_to_live + years_to_rent }} years of simply investing in market (the home costs etc) instead of buying, living, renting, and selling the house: ${{ "{:,.2f}".format(investment_market) }}</p>
 
             <p class="{% if optimal_scenario == 'Buy, Live, and Sell' %} green {% else %} red {% endif %}">The optimal scenario is: {{ optimal_scenario }} with a net profit of ${{ "{:,.2f}".format(optimal_profit) }}</p>
 
-            {% if profit_buy_live_sell > -cost_rent_only %}
-                <p class="green">Buying and selling the home after {{ years_to_live }} years is more profitable than renting. Net profit difference: ${{ "{:,.2f}".format(profit_buy_live_sell + cost_rent_only) }}</p>
+            {% if profit_buy_live_rent_sell > investment_market %}
+                <p class="green">Buying, renting and selling the home after {{ years_to_live }} years of living and after {{ years_to_rent }} years of renting as landlord is more profitable than investing. Net profit difference: ${{ "{:,.2f}".format(profit_buy_live_rent_sell - investment_market) }}</p>
             {% else %}
-                <p class="red">Renting for {{ years_to_live }} years is more cost-effective than buying and selling the home. Cost difference: ${{ "{:,.2f}".format(-cost_rent_only - profit_buy_live_sell) }}</p>
+                <p class="red">Buying, renting and selling the home after {{ years_to_live }} years of living and after {{ years_to_rent }} years of renting as landlord is less profitable than investing. Cost difference: ${{ "{:,.2f}".format(investment_market - profit_buy_live_rent_sell) }}</p>
             {% endif %}
+
+            <p>It takes {{ break_even_years }} years to break even. Meaning that the return of both scenario be the same.</p>
+            <p>It takes {{ positive_cash_flow_year }} years so your rental property creates positive cashflow!</p>
+
+            
+
+
+
+
         </div>
     </div>
 
