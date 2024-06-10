@@ -312,143 +312,134 @@ def simulate_rent_invest(years_to_live, years_to_rent, initial_purchase_price, d
     return investment_value
 
 
-def simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return):
-    """
-    Simulates the financial outcome of renting versus buying a property and investing the difference.
+# def simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return):
+#     """
+#     Simulates the financial outcome of renting versus buying a property and investing the difference.
 
-    Args:
-        years_to_live (int): The number of years the person plans to live in the property.
-        years_to_rent (int): The number of years the person plans to rent after living in the property.
-        initial_purchase_price (float): The initial purchase price of the property.
-        down_payment_percentage (float): The percentage of the initial purchase price paid as a down payment.
-        buyer_closing_costs_percentage (float): The percentage of the initial purchase price paid as buyer closing costs.
-        annual_interest_rate (float): The annual interest rate on the mortgage.
-        loan_term_years (int): The number of years of the mortgage loan term.
-        property_tax_rate (float): The annual property tax rate as a decimal.
-        home_insurance_initial (float): The initial annual home insurance cost.
-        maintenance_rate (float): The annual maintenance cost as a percentage of the initial purchase price.
-        hoa_fee_initial (float): The initial monthly HOA fee.
-        hoa_fee_annual_increase (float): The annual increase in the HOA fee as a decimal.
-        inflation_rate (float): The annual inflation rate as a decimal.
-        annual_appreciation_rate (float): The annual property appreciation rate as a decimal.
-        vacancy_rate (float): The vacancy rate as a decimal.
-        property_management_fee_rate (float): The property management fee rate as a decimal.
-        price_to_rent_ratio (float): The price-to-rent ratio.
-        annual_rent_increase_rate (float): The annual rent increase rate as a decimal.
-        agent_commission_rate (float): The agent commission rate as a decimal.
-        transfer_tax_rate (float): The transfer tax rate as a decimal.
-        fixed_selling_costs (float): The fixed selling costs.
-        annual_stock_market_return (float): The annual stock market return as a decimal.
+#     Args:
+#         years_to_live (int): The number of years the person plans to live in the property.
+#         years_to_rent (int): The number of years the person plans to rent after living in the property.
+#         initial_purchase_price (float): The initial purchase price of the property.
+#         down_payment_percentage (float): The percentage of the initial purchase price paid as a down payment.
+#         buyer_closing_costs_percentage (float): The percentage of the initial purchase price paid as buyer closing costs.
+#         annual_interest_rate (float): The annual interest rate on the mortgage.
+#         loan_term_years (int): The number of years of the mortgage loan term.
+#         property_tax_rate (float): The annual property tax rate as a decimal.
+#         home_insurance_initial (float): The initial annual home insurance cost.
+#         maintenance_rate (float): The annual maintenance cost as a percentage of the initial purchase price.
+#         hoa_fee_initial (float): The initial monthly HOA fee.
+#         hoa_fee_annual_increase (float): The annual increase in the HOA fee as a decimal.
+#         inflation_rate (float): The annual inflation rate as a decimal.
+#         annual_appreciation_rate (float): The annual property appreciation rate as a decimal.
+#         vacancy_rate (float): The vacancy rate as a decimal.
+#         property_management_fee_rate (float): The property management fee rate as a decimal.
+#         price_to_rent_ratio (float): The price-to-rent ratio.
+#         annual_rent_increase_rate (float): The annual rent increase rate as a decimal.
+#         agent_commission_rate (float): The agent commission rate as a decimal.
+#         transfer_tax_rate (float): The transfer tax rate as a decimal.
+#         fixed_selling_costs (float): The fixed selling costs.
+#         annual_stock_market_return (float): The annual stock market return as a decimal.
 
-    Returns:
-        tuple: Final investment values for both scenarios.
-    """
-    # Initial investment in the stock market for Scenario A
-    initial_investment = initial_purchase_price * \
-        (down_payment_percentage + buyer_closing_costs_percentage)
-    investment_value_A = initial_investment
+#     Returns:
+#         tuple: Final investment values for both scenarios.
+#     """
+#     # Initial investment in the stock market for Scenario A
+#     initial_investment = initial_purchase_price * \
+#         (down_payment_percentage + buyer_closing_costs_percentage)
+#     investment_value_A = initial_investment
 
-    # Initial cost for Scenario B
-    total_cost_B = initial_investment
-    investment_value_B = 0  # Initial stock market investment for positive net rental income
-    positive_cash_flow_year = 10000
+#     # Initial cost for Scenario B
+#     total_cost_B = initial_investment
+#     investment_value_B = 0  # Initial stock market investment for positive net rental income
+#     positive_cash_flow_year = 10000
 
-    # Calculate mortgage payment
-    monthly_payment_estimate = calculate_monthly_payment(
-        initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
-    annual_mortgage_payment = monthly_payment_estimate * 12
+#     # Calculate mortgage payment
+#     monthly_payment_estimate = calculate_monthly_payment(
+#         initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
+#     annual_mortgage_payment = monthly_payment_estimate * 12
     
-    # Rental value estimate at the purchase time
-    monthly_rent_estimate = (initial_purchase_price / price_to_rent_ratio) / 12
+#     # Rental value estimate at the purchase time
+#     monthly_rent_estimate = (initial_purchase_price / price_to_rent_ratio) / 12
 
-    for year in range(1, years_to_live + years_to_rent + 1):
+#     for year in range(1, years_to_live + years_to_rent + 1):
 
-        # Calculate costs of homeownership
-        annual_property_tax = initial_purchase_price * \
-            property_tax_rate * (1 + inflation_rate) ** (year - 1)
-        annual_home_insurance = home_insurance_initial * \
-            (1 + inflation_rate) ** (year - 1)
-        annual_maintenance_cost = initial_purchase_price * \
-            maintenance_rate * (1 + inflation_rate) ** (year - 1)
-        annual_hoa_fee = hoa_fee_initial * 12 * \
-            (1 + hoa_fee_annual_increase) ** (year - 1)
-        total_annual_home_cost = annual_property_tax + \
-            annual_home_insurance + annual_maintenance_cost + annual_hoa_fee
+#         annual_property_tax = initial_purchase_price * property_tax_rate * (1 + inflation_rate) ** (year - 1)
+#         annual_home_insurance = home_insurance_initial * (1 + inflation_rate) ** (year - 1)
+#         annual_maintenance_cost = initial_purchase_price * maintenance_rate * (1 + inflation_rate) ** (year - 1)
+#         annual_hoa_fee = hoa_fee_initial * 12 * (1 + hoa_fee_annual_increase) ** (year - 1)
+#         total_annual_home_cost = annual_property_tax + annual_home_insurance + annual_maintenance_cost + annual_hoa_fee
 
-        if year <= years_to_live:
 
-            # Total annual home cost while living in the house
-            total_annual_cost = annual_mortgage_payment + total_annual_home_cost
+#         if year <= years_to_live:
 
-            # Scenario A: Invest this cost in the stock market
-            investment_value_A = (
-                investment_value_A + total_annual_cost) * (1 + annual_stock_market_return)
+#             # Total annual home cost while living in the house
+#             total_annual_cost = annual_mortgage_payment + total_annual_home_cost
 
-            # Scenario B: Accumulate this cost
-            total_cost_B += total_annual_cost
+#             # Scenario A: Invest this cost in the stock market
+#             investment_value_A = (
+#                 investment_value_A + total_annual_cost) * (1 + annual_stock_market_return)
 
-        else:
-            # Calculate rental income
-            monthly_rent_income = (initial_purchase_price * (1 + annual_appreciation_rate) ** (year - years_to_live) /
-                                   price_to_rent_ratio) / 12 * (1 + annual_rent_increase_rate) ** (year - years_to_live - 1)
-            annual_rent_income = monthly_rent_income * 12
-            annual_rent_income_after_vacancy = annual_rent_income * \
-                (1 - vacancy_rate)
-            annual_property_management_fee = annual_rent_income_after_vacancy * \
-                property_management_fee_rate
-            annual_rent_income_net = annual_rent_income_after_vacancy - \
-                annual_property_management_fee
+#             # Scenario B: Accumulate this cost
+#             total_cost_B += total_annual_cost
 
-            # Net annual income while renting out the house
-            net_rental_income = annual_rent_income_net - total_annual_home_cost
+#         else:
+#             # Calculate rental income
+#             monthly_rent_income = (initial_purchase_price * (1 + annual_appreciation_rate) ** (year - years_to_live) /
+#                                    price_to_rent_ratio) / 12 * (1 + annual_rent_increase_rate) ** (year - years_to_live - 1)
+#             annual_rent_income = monthly_rent_income * 12
+#             annual_rent_income_after_vacancy = annual_rent_income * \
+#                 (1 - vacancy_rate)
+#             annual_property_management_fee = annual_rent_income_after_vacancy * \
+#                 property_management_fee_rate
+#             annual_rent_income_net = annual_rent_income_after_vacancy - \
+#                 annual_property_management_fee
 
-            # Scenario A: If net rental income is negative, invest the negative amount in the stock market
-            if net_rental_income < 0:
-                investment_value_A = (
-                    investment_value_A - net_rental_income) * (1 + annual_stock_market_return)
-            else:
-                investment_value_A *= (1 + annual_stock_market_return)
+#             # Net annual income while renting out the house
+#             net_rental_income = annual_rent_income_net - total_annual_home_cost
 
-            # Scenario B: Accumulate total costs and invest positive net rental income in the stock market
-            if net_rental_income > 0:
-                positive_cash_flow_year = year
-                investment_value_B = (
-                    investment_value_B + net_rental_income) * (1 + annual_stock_market_return)
-            else:
-                total_cost_B += -net_rental_income
+#             # Scenario A: If net rental income is negative, invest the negative amount in the stock market
+#             if net_rental_income < 0:
+#                 investment_value_A = (
+#                     investment_value_A - net_rental_income) * (1 + annual_stock_market_return)
+#             else:
+#                 investment_value_A *= (1 + annual_stock_market_return)
 
-    # Selling the property at the end of the living period
-    final_property_value = initial_purchase_price * \
-        (1 + annual_appreciation_rate) ** years_to_live
-    selling_costs = (final_property_value * agent_commission_rate) + \
-        (final_property_value * transfer_tax_rate) + fixed_selling_costs
-    net_sale_proceeds = final_property_value - selling_costs
+#             # Scenario B: Accumulate total costs and invest positive net rental income in the stock market
+#             if net_rental_income > 0:
+#                 positive_cash_flow_year = year
+#                 investment_value_B = (
+#                     investment_value_B + net_rental_income) * (1 + annual_stock_market_return)
+#             else:
+#                 total_cost_B += -net_rental_income
 
-    # Scenario A: Add net sale proceeds to investment value
-    investment_value_A += net_sale_proceeds
+#     # Selling the property at the end of the living period
+#     final_property_value = initial_purchase_price * \
+#         (1 + annual_appreciation_rate) ** years_to_live
+#     selling_costs = (final_property_value * agent_commission_rate) + \
+#         (final_property_value * transfer_tax_rate) + fixed_selling_costs
+#     net_sale_proceeds = final_property_value - selling_costs
 
-    # Scenario B: Calculate final profit from real estate investment and add investment value from positive net rental income
-    total_profit_B = net_sale_proceeds - total_cost_B + investment_value_B
+#     # Scenario A: Add net sale proceeds to investment value
+#     investment_value_A += net_sale_proceeds
 
-    return investment_value_A, total_profit_B, positive_cash_flow_year
+#     # Scenario B: Calculate final profit from real estate investment and add investment value from positive net rental income
+#     total_profit_B = net_sale_proceeds - total_cost_B + investment_value_B
+
+#     return investment_value_A, total_profit_B, positive_cash_flow_year
 
 #########
 #########
 
 
-# Function to calculate depreciation
 def calculate_annual_depreciation(purchase_price, land_value):
     depreciable_basis = purchase_price - land_value
     annual_depreciation = depreciable_basis / 27.5
     return annual_depreciation
 
-# Function to calculate net rental income with depreciation and taxes
-def calculate_net_rental_income(gross_rental_income, mortgage_interest, property_tax, home_insurance, maintenance_cost, hoa_fee, property_management_fee, annual_depreciation, tax_rate):
-    total_expenses = mortgage_interest + property_tax + home_insurance + maintenance_cost + hoa_fee + property_management_fee + annual_depreciation
-    taxable_income = gross_rental_income - total_expenses
+def calculate_taxable_income(gross_rental_income, total_expenses, annual_depreciation, tax_rate):
+    taxable_income = gross_rental_income - total_expenses - annual_depreciation
     taxes = taxable_income * tax_rate if taxable_income > 0 else 0
-    net_income_after_taxes = taxable_income - taxes
-    return net_income_after_taxes
+    return taxes
 
 # Adjust the simulation function to include depreciation and taxes
 def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, tax_rate, land_value):
@@ -479,8 +470,10 @@ def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchas
             annual_rent_income_after_vacancy = annual_rent_income * (1 - vacancy_rate)
             annual_property_management_fee = annual_rent_income_after_vacancy * property_management_fee_rate
 
-            net_rental_income = calculate_net_rental_income(annual_rent_income_after_vacancy, annual_mortgage_payment, annual_property_tax, annual_home_insurance, annual_maintenance_cost, annual_hoa_fee, annual_property_management_fee, annual_depreciation, tax_rate)
-
+            total_expenses = annual_mortgage_payment + annual_property_tax + annual_home_insurance + annual_maintenance_cost + annual_hoa_fee + annual_property_management_fee
+            taxes = calculate_taxable_income(annual_rent_income_after_vacancy, total_expenses, annual_depreciation, tax_rate)
+            net_rental_income = annual_rent_income_after_vacancy - total_expenses - taxes
+            
             if net_rental_income < 0:
                 investment_value_A = (investment_value_A - net_rental_income) * (1 + annual_stock_market_return)
             else:
