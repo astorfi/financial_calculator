@@ -436,6 +436,11 @@ def calculate_annual_depreciation(purchase_price, land_value):
     annual_depreciation = depreciable_basis / 27.5
     return annual_depreciation
 
+def calculate_remaining_mortgage(principal, annual_interest_rate, total_months, payments_made):
+    monthly_interest_rate = annual_interest_rate / 12
+    remaining_balance = principal * ((1 + monthly_interest_rate) ** total_months - (1 + monthly_interest_rate) ** payments_made) / ((1 + monthly_interest_rate) ** total_months - 1)
+    return max(remaining_balance, 0)  # Ensures the remaining balance is not negative
+
 def calculate_taxable_income(gross_rental_income, total_expenses, annual_depreciation, tax_rate):
     taxable_income = gross_rental_income - total_expenses - annual_depreciation
     taxes = taxable_income * tax_rate if taxable_income > 0 else 0
@@ -443,15 +448,28 @@ def calculate_taxable_income(gross_rental_income, total_expenses, annual_depreci
 
 # Adjust the simulation function to include depreciation and taxes
 def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, tax_rate, land_value):
+    # initial_investment = initial_purchase_price * (down_payment_percentage + buyer_closing_costs_percentage)
+    # investment_value_A = initial_investment
+    # total_cost_B = initial_investment
+    # investment_value_B = 0
+    # positive_cash_flow_year = -1
+
+    # monthly_payment = calculate_monthly_payment(initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
+    # annual_mortgage_payment = monthly_payment * 12
+    # annual_depreciation = calculate_annual_depreciation(initial_purchase_price, land_value)
+
     initial_investment = initial_purchase_price * (down_payment_percentage + buyer_closing_costs_percentage)
     investment_value_A = initial_investment
     total_cost_B = initial_investment
     investment_value_B = 0
     positive_cash_flow_year = -1
 
-    monthly_payment = calculate_monthly_payment(initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
+    principal = initial_purchase_price - initial_purchase_price * down_payment_percentage
+    monthly_payment = calculate_monthly_payment(principal, annual_interest_rate, loan_term_years * 12)
     annual_mortgage_payment = monthly_payment * 12
     annual_depreciation = calculate_annual_depreciation(initial_purchase_price, land_value)
+
+    data = []
 
     for year in range(1, years_to_live + years_to_rent + 1):
         annual_property_tax = initial_purchase_price * property_tax_rate * (1 + inflation_rate) ** (year - 1)
@@ -473,7 +491,7 @@ def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchas
             total_expenses = annual_mortgage_payment + annual_property_tax + annual_home_insurance + annual_maintenance_cost + annual_hoa_fee + annual_property_management_fee
             taxes = calculate_taxable_income(annual_rent_income_after_vacancy, total_expenses, annual_depreciation, tax_rate)
             net_rental_income = annual_rent_income_after_vacancy - total_expenses - taxes
-            
+
             if net_rental_income < 0:
                 investment_value_A = (investment_value_A - net_rental_income) * (1 + annual_stock_market_return)
             else:
@@ -490,8 +508,10 @@ def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchas
     selling_costs = (final_property_value * agent_commission_rate) + (final_property_value * transfer_tax_rate) + fixed_selling_costs
     net_sale_proceeds = final_property_value - selling_costs
 
-    investment_value_A += net_sale_proceeds
-    total_profit_B = net_sale_proceeds - total_cost_B + investment_value_B
+    payments_made = (years_to_live + years_to_rent) * 12
+    remaining_mortgage_balance = calculate_remaining_mortgage(principal, annual_interest_rate, loan_term_years * 12, payments_made)
+
+    total_profit_B = net_sale_proceeds - total_cost_B + investment_value_B - remaining_mortgage_balance
 
     return investment_value_A, total_profit_B, positive_cash_flow_year
 
