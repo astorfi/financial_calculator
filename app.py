@@ -30,6 +30,8 @@ agent_commission_rate = 0.055
 transfer_tax_rate = 0.0025
 # Title insurance, attorney fees, recording fees
 fixed_selling_costs = 1500 + 1000 + 50
+land_value = 0.2 * initial_purchase_price
+tax_rate = 0.25
 
 # def calculate_monthly_payment(principal, annual_interest_rate, total_months):
 #     """
@@ -430,6 +432,89 @@ def simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase
 
     return investment_value_A, total_profit_B, positive_cash_flow_year
 
+#########
+#########
+
+
+# Function to calculate depreciation
+def calculate_annual_depreciation(purchase_price, land_value):
+    depreciable_basis = purchase_price - land_value
+    annual_depreciation = depreciable_basis / 27.5
+    return annual_depreciation
+
+# Function to calculate net rental income with depreciation and taxes
+def calculate_net_rental_income(gross_rental_income, mortgage_interest, property_tax, home_insurance, maintenance_cost, hoa_fee, property_management_fee, annual_depreciation, tax_rate):
+    total_expenses = mortgage_interest + property_tax + home_insurance + maintenance_cost + hoa_fee + property_management_fee + annual_depreciation
+    taxable_income = gross_rental_income - total_expenses
+    taxes = taxable_income * tax_rate if taxable_income > 0 else 0
+    net_income_after_taxes = taxable_income - taxes
+    return net_income_after_taxes
+
+# Adjust the simulation function to include depreciation and taxes
+def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, tax_rate, land_value):
+    initial_investment = initial_purchase_price * (down_payment_percentage + buyer_closing_costs_percentage)
+    investment_value_A = initial_investment
+    total_cost_B = initial_investment
+    investment_value_B = 0
+    positive_cash_flow_year = -1
+
+    monthly_payment = calculate_monthly_payment(initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
+    annual_mortgage_payment = monthly_payment * 12
+    annual_depreciation = calculate_annual_depreciation(initial_purchase_price, land_value)
+
+    for year in range(1, years_to_live + years_to_rent + 1):
+        annual_property_tax = initial_purchase_price * property_tax_rate * (1 + inflation_rate) ** (year - 1)
+        annual_home_insurance = home_insurance_initial * (1 + inflation_rate) ** (year - 1)
+        annual_maintenance_cost = initial_purchase_price * maintenance_rate * (1 + inflation_rate) ** (year - 1)
+        annual_hoa_fee = hoa_fee_initial * 12 * (1 + hoa_fee_annual_increase) ** (year - 1)
+        total_annual_home_cost = annual_property_tax + annual_home_insurance + annual_maintenance_cost + annual_hoa_fee
+
+        if year <= years_to_live:
+            total_annual_cost = annual_mortgage_payment + total_annual_home_cost
+            investment_value_A = (investment_value_A + total_annual_cost) * (1 + annual_stock_market_return)
+            total_cost_B += total_annual_cost
+        else:
+            monthly_rent_income = (initial_purchase_price * (1 + annual_appreciation_rate) ** (year - years_to_live) / price_to_rent_ratio) / 12 * (1 + annual_rent_increase_rate) ** (year - years_to_live - 1)
+            annual_rent_income = monthly_rent_income * 12
+            annual_rent_income_after_vacancy = annual_rent_income * (1 - vacancy_rate)
+            annual_property_management_fee = annual_rent_income_after_vacancy * property_management_fee_rate
+
+            net_rental_income = calculate_net_rental_income(annual_rent_income_after_vacancy, annual_mortgage_payment, annual_property_tax, annual_home_insurance, annual_maintenance_cost, annual_hoa_fee, annual_property_management_fee, annual_depreciation, tax_rate)
+
+            if net_rental_income < 0:
+                investment_value_A = (investment_value_A - net_rental_income) * (1 + annual_stock_market_return)
+            else:
+                investment_value_A *= (1 + annual_stock_market_return)
+
+            if net_rental_income > 0:
+                positive_cash_flow_year = year
+                investment_value_B = (investment_value_B + net_rental_income) * (1 + annual_stock_market_return)
+            else:
+                total_cost_B += -net_rental_income
+
+    final_property_value = initial_purchase_price * (1 + annual_appreciation_rate) ** years_to_live
+    selling_costs = (final_property_value * agent_commission_rate) + (final_property_value * transfer_tax_rate) + fixed_selling_costs
+    net_sale_proceeds = final_property_value - selling_costs
+
+    investment_value_A += net_sale_proceeds
+    total_profit_B = net_sale_proceeds - total_cost_B + investment_value_B
+
+    return investment_value_A, total_profit_B, positive_cash_flow_year
+
+# Function to find the break-even point by iterating over different years_to_rent
+def find_break_even_point(initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, tax_rate, land_value, max_years):
+    for years_to_rent in range(1, max_years + 1):
+        investment_value_A, total_profit_B, positive_cash_flow_year = simulate_market_vs_real_estate(
+            0, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, tax_rate, land_value)
+
+        if total_profit_B >= investment_value_A:
+            return years_to_rent, investment_value_A, total_profit_B
+
+    # Return default values if no break-even point is found
+    return None, None, None
+
+######
+######
 
 def simulate_rent_only(years_to_live, initial_purchase_price, price_to_rent_ratio, annual_rent_increase_rate):
     """
@@ -556,31 +641,48 @@ def calculate():
     monthly_rent_estimate = (initial_purchase_price / price_to_rent_ratio) / 12
 
 
-    market_return, real_state_return, positive_cash_flow_year = simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase_price,
-                                                                                              down_payment_percentage, buyer_closing_costs_percentage,
-                                                                                              annual_interest_rate, loan_term_years, property_tax_rate,
-                                                                                              home_insurance_initial, maintenance_rate, hoa_fee_initial,
-                                                                                              hoa_fee_annual_increase, inflation_rate,
-                                                                                              annual_appreciation_rate, vacancy_rate,
-                                                                                              property_management_fee_rate,
-                                                                                              price_to_rent_ratio, annual_rent_increase_rate,
-                                                                                              agent_commission_rate, transfer_tax_rate,
-                                                                                              fixed_selling_costs, annual_stock_market_return)
+    # market_return, real_state_return, positive_cash_flow_year = simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase_price,
+    #                                                                                           down_payment_percentage, buyer_closing_costs_percentage,
+    #                                                                                           annual_interest_rate, loan_term_years, property_tax_rate,
+    #                                                                                           home_insurance_initial, maintenance_rate, hoa_fee_initial,
+    #                                                                                           hoa_fee_annual_increase, inflation_rate,
+    #                                                                                           annual_appreciation_rate, vacancy_rate,
+    #                                                                                           property_management_fee_rate,
+    #                                                                                           price_to_rent_ratio, annual_rent_increase_rate,
+    #                                                                                           agent_commission_rate, transfer_tax_rate,
+    #                                                                                           fixed_selling_costs, annual_stock_market_return)
 
-    # Define a function to find the break-even point by iterating over different years_to_rent
-    def find_break_even_point(initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, max_years):
-        for years_to_rent in range(1, max_years + 1):
-            investment_value_A, total_profit_B, positive_cash_flow_year = simulate_market_vs_real_state(
-                0, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return)
+    # Run the simulation
+    market_return, real_estate_return, positive_cash_flow_year = simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchase_price,
+                                                                                                down_payment_percentage, buyer_closing_costs_percentage,
+                                                                                                annual_interest_rate, loan_term_years, property_tax_rate,
+                                                                                                home_insurance_initial, maintenance_rate, hoa_fee_initial,
+                                                                                                hoa_fee_annual_increase, inflation_rate,
+                                                                                                annual_appreciation_rate, vacancy_rate,
+                                                                                                property_management_fee_rate,
+                                                                                                price_to_rent_ratio, annual_rent_increase_rate,
+                                                                                                agent_commission_rate, transfer_tax_rate,
+                                                                                                fixed_selling_costs, annual_stock_market_return,
+                                                                                                tax_rate, land_value)
+        
+    
+    break_even_years, investment_value_A_at_break_even, total_profit_B_at_break_even = find_break_even_point(initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, tax_rate, land_value, 30)
 
-            if total_profit_B >= investment_value_A:
-                return years_to_rent, investment_value_A, total_profit_B
 
-        return None
+    # # Define a function to find the break-even point by iterating over different years_to_rent
+    # def find_break_even_point(initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, max_years):
+    #     for years_to_rent in range(1, max_years + 1):
+    #         investment_value_A, total_profit_B, positive_cash_flow_year = simulate_market_vs_real_state(
+    #             0, years_to_rent, initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return)
 
-    # Find the break-even point
-    break_even_years, investment_value_A_at_break_even, total_profit_B_at_break_even = find_break_even_point(
-        initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, 30)
+    #         if total_profit_B >= investment_value_A:
+    #             return years_to_rent, investment_value_A, total_profit_B
+
+    #     return None
+
+    # # Find the break-even point
+    # break_even_years, investment_value_A_at_break_even, total_profit_B_at_break_even = find_break_even_point(
+    #     initial_purchase_price, down_payment_percentage, buyer_closing_costs_percentage, annual_interest_rate, loan_term_years, property_tax_rate, home_insurance_initial, maintenance_rate, hoa_fee_initial, hoa_fee_annual_increase, inflation_rate, annual_appreciation_rate, vacancy_rate, property_management_fee_rate, price_to_rent_ratio, annual_rent_increase_rate, agent_commission_rate, transfer_tax_rate, fixed_selling_costs, annual_stock_market_return, 30)
 
     # Simulate the cost of renting only
     cost_rent_only = simulate_rent_only(
@@ -588,17 +690,17 @@ def calculate():
     )
 
     scenarios = ["Buy, Live, Rent, and Sell", "Market Invest"]
-    profits = [real_state_return, market_return]
+    profits = [real_estate_return, market_return]
     optimal_scenario = scenarios[np.argmax(profits)]
     optimal_profit = max(profits)
 
     return render_template('result.html', profit_buy_live_sell=profit_buy_live_sell,
-                           profit_buy_live_rent_sell=real_state_return,
+                           profit_buy_live_rent_sell=real_estate_return,
                            investment_market=market_return,
                            cost_rent_only=cost_rent_only,
+                           break_even_years = break_even_years,
                            monthly_payment_estimate=monthly_payment_estimate,
                            monthly_rental_estimate=monthly_rent_estimate,
-                           break_even_years=break_even_years,
                            positive_cash_flow_year = positive_cash_flow_year,
                            years_to_live=years_to_live,
                            years_to_rent=years_to_rent,
