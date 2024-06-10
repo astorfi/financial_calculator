@@ -487,7 +487,8 @@ def simulate_market_vs_real_estate(years_to_live, years_to_rent, initial_purchas
                 investment_value_A *= (1 + annual_stock_market_return)
 
             if net_rental_income > 0:
-                positive_cash_flow_year = year
+                if positive_cash_flow_year == -1:
+                    positive_cash_flow_year = year
                 investment_value_B = (investment_value_B + net_rental_income) * (1 + annual_stock_market_return)
             else:
                 total_cost_B += -net_rental_income
