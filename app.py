@@ -351,6 +351,14 @@ def simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase
     investment_value_B = 0  # Initial stock market investment for positive net rental income
     positive_cash_flow_year = 10000
 
+    # Calculate mortgage payment
+    monthly_payment_estimate = calculate_monthly_payment(
+        initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
+    annual_mortgage_payment = monthly_payment_estimate * 12
+    
+    # Rental value estimate at the purchase time
+    monthly_rent_estimate = (initial_purchase_price / price_to_rent_ratio) / 12
+
     for year in range(1, years_to_live + years_to_rent + 1):
 
         # Calculate costs of homeownership
@@ -366,10 +374,6 @@ def simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase
             annual_home_insurance + annual_maintenance_cost + annual_hoa_fee
 
         if year <= years_to_live:
-            # Calculate mortgage payment
-            monthly_payment = calculate_monthly_payment(
-                initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
-            annual_mortgage_payment = monthly_payment * 12
 
             # Total annual home cost while living in the house
             total_annual_cost = annual_mortgage_payment + total_annual_home_cost
@@ -544,6 +548,14 @@ def calculate():
         fixed_selling_costs, annual_stock_market_return
     )
 
+    # Calculate mortgage payment
+    monthly_payment_estimate = calculate_monthly_payment(
+        initial_purchase_price - initial_purchase_price * down_payment_percentage, annual_interest_rate, loan_term_years * 12)
+    
+    # Rental value estimate at the purchase time
+    monthly_rent_estimate = (initial_purchase_price / price_to_rent_ratio) / 12
+
+
     market_return, real_state_return, positive_cash_flow_year = simulate_market_vs_real_state(years_to_live, years_to_rent, initial_purchase_price,
                                                                                               down_payment_percentage, buyer_closing_costs_percentage,
                                                                                               annual_interest_rate, loan_term_years, property_tax_rate,
@@ -584,6 +596,8 @@ def calculate():
                            profit_buy_live_rent_sell=real_state_return,
                            investment_market=market_return,
                            cost_rent_only=cost_rent_only,
+                           monthly_payment_estimate=monthly_payment_estimate,
+                           monthly_rental_estimate=monthly_rent_estimate,
                            break_even_years=break_even_years,
                            positive_cash_flow_year = positive_cash_flow_year,
                            years_to_live=years_to_live,
