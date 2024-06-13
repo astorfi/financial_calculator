@@ -24,11 +24,11 @@
                 <p class="red">Buying, renting and selling the home after {{ years_to_live }} years of living and after {{ years_to_rent }} years of renting as landlord is less profitable than investing. Cost difference: ${{ "{:,.2f}".format(investment_market - profit_buy_live_rent_sell) }}</p>
             {% endif %}
 
-            {% if break_even_years is not none %}
+            <!-- {% if break_even_years is not none %}
                 <p class="green">It takes {{ break_even_years }} years to break even. Meaning that the return of both scenarios is the same.</p>
             {% else %}
                 <p class="red">No break-even point found within the specified range.</p>
-            {% endif %}
+            {% endif %} -->
 
             {% if positive_cash_flow_year != -1 %}
                 <p class="green">It takes {{ positive_cash_flow_year }} years after purchase so your rental property creates cashflow.</p>
